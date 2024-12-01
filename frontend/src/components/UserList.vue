@@ -58,6 +58,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default {
     methods: {
       handleClick(row) {
@@ -69,40 +71,20 @@
       },
       handleCurrentChange(val) {
         this.currentPage = val;
+      },
+      async fetchUsers() {
+        try {
+          const response = await axios.get('http://localhost:3000/api/users');
+          this.tableData = response.data;
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
       }
     },
 
     data() {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1517 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1519 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        }],
+        tableData: [],
         currentPage: 1,
         pageSize: 10
       }
@@ -114,6 +96,10 @@
         const end = start + this.pageSize;
         return this.tableData.slice(start, end);
       }
+    },
+
+    created() {
+      this.fetchUsers();
     }
   }
 </script>
